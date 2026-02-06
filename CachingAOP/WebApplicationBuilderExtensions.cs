@@ -1,11 +1,18 @@
-﻿namespace CachingAOP
+﻿namespace CachingAOP;
+
+public static class WebApplicationBuilderExtensions
 {
-    public static class WebApplicationBuilderExtensions
+    public static WebApplication BuildWithCache(this WebApplicationBuilder webApplicationBuilder)
     {
-        public static WebApplication BuildWithCache(this WebApplicationBuilder webApplicationBuilder)
-        {
-            webApplicationBuilder.Services.AddCaching();
-            return webApplicationBuilder.Build();
-        }
+        webApplicationBuilder.Services.AddCaching();
+        return webApplicationBuilder.Build();
+    }
+
+    public static WebApplication BuildWithProxyCache(this WebApplicationBuilder webApplicationBuilder)
+    {
+        webApplicationBuilder.Services.AddProxyCacheFromAssemblies<CacheAttribute, CacheProxy<object>>();
+        //or
+        //webApplicationBuilder.Services.AddCacheFromAssemblies(typeof(CacheAttribute), typeof(CacheProxy<>));
+        return webApplicationBuilder.Build();
     }
 }
