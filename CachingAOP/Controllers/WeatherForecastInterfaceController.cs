@@ -4,12 +4,12 @@ namespace CachingAOP.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+public class WeatherForecastInterfaceController : ControllerBase
 {
-    private readonly ILogger<WeatherForecastController> _logger;
-    private readonly WeatherForecastService _weatherForecastService;
+    private readonly ILogger<WeatherForecastInterfaceController> _logger;
+    private readonly IWeatherForecastService _weatherForecastService;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, WeatherForecastService weatherForecastService)
+    public WeatherForecastInterfaceController(ILogger<WeatherForecastInterfaceController> logger, IWeatherForecastService weatherForecastService)
     {
         _logger = logger;
         _weatherForecastService = weatherForecastService;

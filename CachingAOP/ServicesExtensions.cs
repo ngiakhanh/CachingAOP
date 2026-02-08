@@ -261,7 +261,7 @@ public static class ServicesExtensions
                 .GetRequiredService(implementation);
 
             var setDecoratedMethod = closedProxyType.GetMethod(
-                nameof(BaseDispatchProxy<>.SetDecorated), 
+                nameof(BaseDispatchProxy<>.SetProxied), 
                 BindingFlags.Instance | BindingFlags.Public);
             setDecoratedMethod?.Invoke(proxy, [actual]);
 

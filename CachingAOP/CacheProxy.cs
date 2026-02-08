@@ -49,12 +49,12 @@ public class CacheProxy<T> : BaseDispatchProxy<T> where T : class
             };
         }
 
-        return targetMethod.Invoke(_decorated, args);
+        return targetMethod.Invoke(_proxied, args);
     }
 
     private CacheMetadata GetMethodMetadata(MethodInfo targetMethod)
     {
-        var implementationType = _decorated.GetType();
+        var implementationType = _proxied.GetType();
         var implementationMethod = implementationType.GetMethod(
             targetMethod.Name,
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
@@ -111,13 +111,13 @@ public class CacheProxy<T> : BaseDispatchProxy<T> where T : class
             }
             else
             {
-                result = targetMethod.Invoke(_decorated, args);
+                result = targetMethod.Invoke(_proxied, args);
                 _cacheService.SetAsync(cacheKey, result).GetAwaiter().GetResult();
             }
         }
         else
         {
-            result = targetMethod.Invoke(_decorated, args);
+            result = targetMethod.Invoke(_proxied, args);
         }
 
         return result;
@@ -133,7 +133,7 @@ public class CacheProxy<T> : BaseDispatchProxy<T> where T : class
         {
             await _cacheService.RemoveAsync();
         }
-        await (Task)targetMethod.Invoke(_decorated, args)!;
+        await (Task)targetMethod.Invoke(_proxied, args)!;
     }
 
     private object InvokeAsyncWithResultDirect(
@@ -195,7 +195,7 @@ public class CacheProxy<T> : BaseDispatchProxy<T> where T : class
         }
         else
         {
-            result = await (Task<TResult>)targetMethod.Invoke(_decorated, args)!;
+            result = await (Task<TResult>)targetMethod.Invoke(_proxied, args)!;
             await _cacheService.SetAsync(cacheKey, result);
         }
         return result;

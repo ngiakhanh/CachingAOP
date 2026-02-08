@@ -4,7 +4,7 @@ namespace CachingAOP;
 
 public abstract class BaseDispatchProxy<T> : DispatchProxy where T : class
 {
-    protected T _decorated;
+    protected T _proxied;
     protected IServiceProvider _serviceProvider;
 
     protected readonly struct CacheMetadata
@@ -25,9 +25,9 @@ public abstract class BaseDispatchProxy<T> : DispatchProxy where T : class
         _serviceProvider = serviceProvider;
     }
 
-    public void SetDecorated(T decorated)
+    public void SetProxied(T proxied)
     {
-        _decorated = decorated;
+        _proxied = proxied;
     }
 
     protected enum MethodCallType
