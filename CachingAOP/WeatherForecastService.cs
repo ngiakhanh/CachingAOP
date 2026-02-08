@@ -5,11 +5,16 @@ public interface IWeatherForecastService
     public List<WeatherForecast> Get();
 
     public Task<List<WeatherForecast>> GetAsync();
+
+    [Cache(Seconds = 30)]
+    public List<WeatherForecast> Throw();
+
+    [Cache(Seconds = 30)]
+    public Task<List<WeatherForecast>> ThrowAsync();
 }
 public class WeatherForecastService : IWeatherForecastService
 {
-    private readonly string[] Summaries = new[]
-        { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"};
+    private readonly string[] Summaries = [ "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" ];
 
     public virtual List<WeatherForecast> Get()
     {
@@ -32,5 +37,15 @@ public class WeatherForecastService : IWeatherForecastService
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToList());
+    }
+
+    public virtual List<WeatherForecast> Throw()
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task<List<WeatherForecast>> ThrowAsync()
+    {
+        throw new NotImplementedException();
     }
 }

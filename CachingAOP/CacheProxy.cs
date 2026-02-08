@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 
 namespace CachingAOP;
 public class CacheProxy<T> : BaseDispatchProxy<T> where T : class
@@ -30,7 +31,7 @@ public class CacheProxy<T> : BaseDispatchProxy<T> where T : class
         return handler.ToStringAndClear();
     }
         
-    protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+    protected override object? InvokeInternal(MethodInfo? targetMethod, object?[]? args)
     {
         var metadata = _metadataCache.GetOrAdd(targetMethod, GetMethodMetadata);
 
@@ -133,7 +134,16 @@ public class CacheProxy<T> : BaseDispatchProxy<T> where T : class
         {
             await _cacheService.RemoveAsync();
         }
-        await (Task)targetMethod.Invoke(_proxied, args)!;
+
+        try
+        {
+            await (Task) targetMethod.Invoke(_proxied, args)!;
+        }
+        catch (TargetInvocationException ex)
+        {
+            ExceptionDispatchInfo.Capture(ex.InnerException ?? ex).Throw();
+            throw;
+        }
     }
 
     private object InvokeAsyncWithResultDirect(
@@ -195,7 +205,16 @@ public class CacheProxy<T> : BaseDispatchProxy<T> where T : class
         }
         else
         {
-            result = await (Task<TResult>)targetMethod.Invoke(_proxied, args)!;
+            try
+            {
+                result = await (Task<TResult>) targetMethod.Invoke(_proxied, args)!;
+            }
+            catch (TargetInvocationException ex)
+            {
+                ExceptionDispatchInfo.Capture(ex.InnerException ?? ex).Throw();
+                throw;
+            }
+
             await _cacheService.SetAsync(cacheKey, result);
         }
         return result;

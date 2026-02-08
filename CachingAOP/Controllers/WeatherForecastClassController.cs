@@ -26,4 +26,16 @@ public class WeatherForecastClassController : ControllerBase
     {
         return _weatherForecastService.Get();
     }
+
+    [HttpGet("CacheThrowAsyncGetWeatherForecast")]
+    public async Task<IEnumerable<WeatherForecast>> ThrowAsync()
+    {
+        return await _weatherForecastService.ThrowAsync();
+    }
+
+    [HttpGet("CacheThrowGetWeatherForecast")]
+    public IEnumerable<WeatherForecast> Throw()
+    {
+        return _weatherForecastService.Throw();
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.ExceptionServices;
 
 namespace CachingAOP;
 
@@ -36,4 +37,19 @@ public abstract class BaseDispatchProxy<T> : DispatchProxy where T : class
         AsyncWithoutResult,
         AsyncWithResult
     }
+
+    protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+    {
+        try
+        {
+            return InvokeInternal(targetMethod, args);
+        }
+        catch (TargetInvocationException ex)
+        {
+            ExceptionDispatchInfo.Capture(ex.InnerException ?? ex).Throw();
+            throw;
+        }
+    }
+
+    protected abstract object? InvokeInternal(MethodInfo? targetMethod, object?[]? args);
 }

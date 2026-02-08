@@ -12,8 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//var app = builder.BuildWithCache();
-var app = builder.BuildWithProxyCache();
+var app = builder.BuildWithCache();
+//var app = builder.BuildWithProxyCache();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
