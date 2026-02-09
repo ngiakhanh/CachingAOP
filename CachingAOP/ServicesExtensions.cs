@@ -39,11 +39,6 @@ public static class ServicesExtensions
 
         foreach (var registration in replacedRegistrations)
         {
-            if (registration.Item1 != null)
-            {
-                services.Remove(registration.Item1);
-            }
-
             if (registration.Item2 != null && registration.Item2.Name != registration.Item3.Name)
             {
                 // Check service lifetime as well
@@ -217,11 +212,6 @@ public static class ServicesExtensions
 
         foreach (var registration in replacedRegistrations)
         {
-            if (registration.Item1 != null)
-            {
-                services.Remove(registration.Item1);
-            }
-
             if (registration.Item2 != null && registration.Item2.Name != registration.Item3.Name)
             {
                 // Check service lifetime as well
