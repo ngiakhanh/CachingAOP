@@ -235,28 +235,28 @@ public static class ServicesExtensions
         }
     }
 
-    public static IServiceCollection AddProxiedScope<TInterface, TImplementation, TProxy>(
+    public static IServiceCollection AddProxiedScope<TAttribute, TImplementation, TProxy>(
         this IServiceCollection serviceCollection)
-        where TInterface : class
-        where TImplementation : class, TInterface
-        where TProxy : BaseDispatchProxy<TInterface>
+        where TAttribute : Attribute
+        where TImplementation : class, TAttribute
+        where TProxy : BaseDispatchProxy<TAttribute>
     {
-        return serviceCollection.AddProxiedScope(typeof(TInterface), typeof(TImplementation), typeof(TProxy));
+        return serviceCollection.AddProxiedScope(typeof(TAttribute), typeof(TImplementation), typeof(TProxy));
     }
 
     public static IServiceCollection AddProxiedScope
-        (this IServiceCollection services, Type @interface, Type implementation, Type proxyType)
+        (this IServiceCollection services, Type attribute, Type implementation, Type proxyType)
     {
         services.AddScoped(implementation);
         // This registers the underlying class
-        services.AddScoped(@interface, serviceProvider =>
+        services.AddScoped(attribute, serviceProvider =>
         {
             // if proxy type is CacheProxy<T> and interface is IWeatherForecastService
             // then make closed type CacheProxy<IWeatherForecastService>
             var closedProxyType = proxyType.IsGenericTypeDefinition
-                ? proxyType.MakeGenericType(@interface)
+                ? proxyType.MakeGenericType(attribute)
                 : proxyType;
-            var proxy = DispatchProxy.Create(@interface, closedProxyType);
+            var proxy = DispatchProxy.Create(attribute, closedProxyType);
             var actual = serviceProvider
                 .GetRequiredService(implementation);
 

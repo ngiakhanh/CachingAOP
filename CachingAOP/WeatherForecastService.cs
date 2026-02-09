@@ -4,6 +4,10 @@ public interface IWeatherForecastService
 {
     public List<WeatherForecast> Get();
 
+    public List<WeatherForecast> GetThrow();
+
+    public Task<List<WeatherForecast>> ThrowAsyncNoCache();
+
     public Task<List<WeatherForecast>> GetAsync();
 
     [Cache(Seconds = 30)]
@@ -25,6 +29,16 @@ public class WeatherForecastService : IWeatherForecastService
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToList();
+    }
+
+    public virtual List<WeatherForecast> GetThrow()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<WeatherForecast>> ThrowAsyncNoCache()
+    {
+        throw new NotImplementedException();
     }
 
     [Cache(Seconds = 30)]
