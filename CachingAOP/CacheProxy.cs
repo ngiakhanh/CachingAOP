@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
 
 namespace CachingAOP;
 public class CacheProxy : BaseDispatchProxy<CacheAttribute>
