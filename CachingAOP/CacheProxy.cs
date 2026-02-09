@@ -72,15 +72,7 @@ public class CacheProxy : BaseDispatchProxy<CacheAttribute>
             await _cacheService.RemoveAsync();
         }
 
-        try
-        {
-            await (Task) targetMethod.Invoke(_proxied, args)!;
-        }
-        catch (TargetInvocationException ex)
-        {
-            ExceptionDispatchInfo.Capture(ex.InnerException ?? ex).Throw();
-            throw;
-        }
+        await (Task) targetMethod.Invoke(_proxied, args)!;
     }
 
     protected override async Task<TResult> InvokeAsyncWithResultInternal<TResult>(
@@ -103,16 +95,7 @@ public class CacheProxy : BaseDispatchProxy<CacheAttribute>
         }
         else
         {
-            try
-            {
-                result = await (Task<TResult>) targetMethod.Invoke(_proxied, args)!;
-            }
-            catch (TargetInvocationException ex)
-            {
-                ExceptionDispatchInfo.Capture(ex.InnerException ?? ex).Throw();
-                throw;
-            }
-
+            result = await (Task<TResult>) targetMethod.Invoke(_proxied, args)!;
             await _cacheService.SetAsync(cacheKey, result);
         }
         return result;
