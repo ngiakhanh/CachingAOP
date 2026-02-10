@@ -167,7 +167,7 @@ public static class ServicesExtensions
 
     public static void AddProxyCacheFromAssemblies<TAttribute, TProxy>(this IServiceCollection serviceCollection)
         where TAttribute : Attribute
-        where TProxy : DispatchProxy
+        where TProxy : BaseDispatchProxy<TAttribute>
     {
         serviceCollection.AddProxyCacheFromAssemblies(typeof(TAttribute), typeof(TProxy));
     }
